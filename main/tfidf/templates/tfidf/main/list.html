@@ -1,5 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<p>Hello world!</p>
+    <p>Hello world!</p>
+    {% if docs %}
+        {% for doc in docs %}
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Word</th>
+                    <th scope="col">tf</th>
+                    <th scope="col">idf</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for word in doc.words.all %}
+                        <tr>
+                        <th scope="row">1</th>
+                        <td>{{ word.word_name }}</td>
+                        <td></td>
+                        <td>{{ word.idf }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

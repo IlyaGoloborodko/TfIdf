@@ -1,0 +1,23 @@
+body {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    height: 100vh;
+}
+
+body #listbox {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+#sidebar {
+    flex: 0.3;
+    max-width: 250px;
+    min-width: 220px;
+}
+
+#content {
+    overflow: auto;
+    flex: 1;
+}

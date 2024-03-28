@@ -8,15 +8,15 @@ class WordDocumentInline(admin.TabularInline):
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = ['document_name', 'slug']
+    list_display = ['document_name', 'slug', 'get_words']
     prepopulated_fields = {'slug': ('document_name',)}
+    raw_id_fields = ['words']
     inlines = (WordDocumentInline,)
 
 
 @admin.register(Word)
 class WordAdmin(admin.ModelAdmin):
     list_display = ['word_name', 'slug', 'total_occurences',
-                    'idf', 'processed', 'get_documents']
+                    'idf', 'processed']
     prepopulated_fields = {'slug': ('word_name',)}
-    raw_id_fields = ['documents']
     inlines = (WordDocumentInline,)

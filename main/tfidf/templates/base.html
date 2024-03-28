@@ -10,8 +10,15 @@
     {% bootstrap_javascript %}
 </head>
 <body>
-    {% block content %}
-    {% endblock %}
+    <div id="listbox">
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" id="sidebar">
+
+        </div>
+        <div id="content" class="container-fluid py-5 bg-light">
+        {% block content %}
+        {% endblock %}
+        </div>
+    </div>
 </body>
 
 </html>

@@ -1,14 +1,6 @@
 from django.db import models
 
-class Document(models.Model):
-    document_name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=100)
 
-    def __str__(self) -> str:
-        return self.document_name
-    
-    class Meta:
-        ordering = ['id']
 
 
 class Word(models.Model):
@@ -17,7 +9,6 @@ class Word(models.Model):
     total_occurences = models.IntegerField(default = 0)
     idf = models.FloatField(default = 0.0)
     processed = models.BooleanField(default = False)
-    documents = models.ManyToManyField(Document, through="WordDocument")
 
     class Meta:
         ordering = ["-idf"]
@@ -25,12 +16,22 @@ class Word(models.Model):
             models.Index(fields=['-idf']),
         ]
 
-    def get_documents(self):
-        return "\n".join([d.document_name for d in self.documents.all()])
-
     def __str__(self) -> str:
         return self.word_name
+    
+class Document(models.Model):
+    document_name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100)
+    words = models.ManyToManyField(Word, through="WordDocument")
 
+    def get_words(self):
+        return "\n".join([d.word_name for d in self.words.all()])
+
+    def __str__(self) -> str:
+        return self.document_name
+    
+    class Meta:
+        ordering = ['id']
 
 class WordDocument(models.Model):
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
