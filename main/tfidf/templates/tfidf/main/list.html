@@ -3,27 +3,27 @@
 {% block content %}
     <p>Hello world!</p>
     {% if docs %}
-        {% for doc in docs %}
-            <table class="table">
+        <table class="table">
+            {% for doc in docs %}
                 <thead>
                     <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">{{ doc.document_name }}</th>
                     <th scope="col">Word</th>
                     <th scope="col">tf</th>
                     <th scope="col">idf</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for word in doc.words.all %}
+                    {% for word_document in doc.worddocument_set.all %}
                         <tr>
                         <th scope="row">1</th>
-                        <td>{{ word.word_name }}</td>
-                        <td></td>
-                        <td>{{ word.idf }}</td>
+                        <td>{{ word_document.word.word_name }}</td>
+                        <td>{{ word_document.word_tf }}</td>
+                        <td>{{ word_document.word.idf }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
-            </table>
-        {% endfor %}
+            {% endfor %}
+        </table>
     {% endif %}
 {% endblock %}
