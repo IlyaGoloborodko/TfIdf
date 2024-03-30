@@ -21,6 +21,7 @@ class Document(models.Model):
     document_name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
     words = models.ManyToManyField(Word, through="WordDocument")
+    document_file = models.FileField(upload_to='documents/', blank=False, null=False, default=None)
 
     def get_words(self):
         return "\n".join([d.word_name for d in self.words.all()])
