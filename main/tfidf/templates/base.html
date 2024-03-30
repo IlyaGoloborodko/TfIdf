@@ -13,10 +13,27 @@
     <div id="listbox">
         <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" id="sidebar">
             <li>
+                <a href="{% url 'tfidf:main_list' %}" class="nav-link text-white">
+                    Return To Main
+                </a>
+            </li>
+            <hr>
+            <li>
                 <a href="{% url 'tfidf:document_create' %}" class="nav-link text-white">
                     Add Document
                 </a>
             </li>
+            <hr>
+            {% if docs %}
+                {% for doc in docs %}
+                    <li>
+                        <form method="get" class="d-flex">
+                            <input type="hidden" name="id" value="{{ doc.id }}" class="form-control form-control-dark">
+                            <button type="submit" class="btn btn-outline-success">{{ doc.document_name }}</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            {% endif %}
         </div>
         <div id="content" class="container-fluid py-5 bg-light">
         {% block content %}

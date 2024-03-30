@@ -19,32 +19,35 @@ def words_filter(full_string: str) -> list:
                         not word in stopwords.words("russian")]
     return filtered_words
 
-def tfidf(text, document):
+def tfidf(text, doc_file):
     if len(text) != 0:
-        words_tf = defaultdict(int)
+        words_count = defaultdict(int)
         filtered_words = words_filter(text)
+        if filtered_words:
+            document = Document.objects.create(document_name=doc_file, document_file=doc_file)
+        else:
+            return False
         for word in filtered_words:
-            words_tf[word] += 1
+            words_count[word] += 1
+
+        num_of_words = len(words_count)
+
     
         db_words = []
         #проходимся по всем словам из текста
-        for elem in words_tf:
+        for elem in words_count:
             #Получаем слово и обновляем поля
             word, created = Word.objects.get_or_create(word_name=elem)
-            
-            print(word.total_occurences)
             word.total_occurences += 1
-            #Вычисляем именно десятичный логарифм
-            docs_count = Document.objects.count()
-            word.idf = round(math.log10(docs_count/word.total_occurences), 3)
-
+            # Помечаем слово как False, чтобы в дальнейшем обновить у него idf
+            word.processed = False
             word.save()
             #Добавляем слово в список
             db_words.append(word)
-
             #Обновляем слова в промежуточной таблице
             word_doc, created = WordDocument.objects.get_or_create(word=word, document=document)
-            word_doc.word_tf = words_tf[elem]
+            word_doc.word_tf = round(words_count[elem]/num_of_words, 3)
+
             word_doc.save()
 
         #Привязываем слова к документу
@@ -52,4 +55,17 @@ def tfidf(text, document):
 
         return True
     return False
+
+def idf_processing(words):
+    """
+    Ленивое вычисление idf только при вызове всех значений.
+    Вызывается только после перехода на главную страницу
+    """
+    for word in words:
+        #Вычисляем именно десятичный логарифм
+        docs_count = Document.objects.count()
+        word.idf = round(math.log10(docs_count/word.total_occurences), 3)
+        word.processed = True
+        word.save()
+
     

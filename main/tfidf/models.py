@@ -4,9 +4,9 @@ from django.db import models
 class Word(models.Model):
     word_name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
-    total_occurences = models.IntegerField(default = 0)
-    idf = models.FloatField(default = 0.0)
-    processed = models.BooleanField(default = False)
+    total_occurences = models.IntegerField(default=0)
+    idf = models.FloatField(default=0.0)
+    processed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["-idf"]
@@ -35,4 +35,4 @@ class Document(models.Model):
 class WordDocument(models.Model):
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     document = models.ForeignKey(Document, on_delete=models.CASCADE)
-    word_tf = models.IntegerField(default = 0)
+    word_tf = models.FloatField(default = 0.0)
