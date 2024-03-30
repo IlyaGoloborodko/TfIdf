@@ -24,8 +24,8 @@
                 </a>
             </li>
             <hr>
-            {% if docs %}
-                {% for doc in docs %}
+            {% if request.document %}
+                {% for doc in request.document %}
                     <li>
                         <form method="get" class="d-flex">
                             <input type="hidden" name="id" value="{{ doc.id }}" class="form-control form-control-dark">
