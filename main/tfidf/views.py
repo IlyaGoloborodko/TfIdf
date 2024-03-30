@@ -1,7 +1,8 @@
 from django.http import HttpResponseRedirect
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
+
 
 from .models import Document, Word
 from .forms import UploadDocumentForm
@@ -46,3 +47,6 @@ class DocumentAddView(CreateView):
             tfidf(raw_txt, doc_file)
 
         return HttpResponseRedirect(self.get_success_url())
+
+class MainPageView(TemplateView):
+    template_name = 'tfidf/main/mainpage.html'

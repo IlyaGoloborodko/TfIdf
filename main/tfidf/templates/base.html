@@ -13,7 +13,7 @@
     <div id="listbox">
         <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" id="sidebar">
             <li>
-                <a href="{% url 'tfidf:main_list' %}" class="nav-link text-white">
+                <a href="{% url 'tfidf:main_page' %}" class="nav-link text-white">
                     Return To Main
                 </a>
             </li>
@@ -27,7 +27,7 @@
             {% if request.document %}
                 {% for doc in request.document %}
                     <li>
-                        <form method="get" class="d-flex">
+                        <form method="get" action="{% url 'tfidf:main_list' %}" class="d-flex">
                             <input type="hidden" name="id" value="{{ doc.id }}" class="form-control form-control-dark">
                             <button type="submit" class="btn btn-outline-success">{{ doc.document_name }}</button>
                         </form>
