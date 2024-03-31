@@ -2,8 +2,6 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
-import operator
-
 
 from .models import Document, Word
 from .forms import UploadDocumentForm
@@ -17,13 +15,7 @@ class MainListView(ListView):
     # paginate_by: int = 10
 
     def get_queryset(self):
-        #Если есть необработанные слова, то перед выводом в них вычисляются idf
-        unprocessed_words = Word.objects.all().filter(processed=False)
-        if unprocessed_words:
-            idf_processing(unprocessed_words)
-
-        #Получаем документ и сразу фильтруем по словам из связанной модели
-            
+        #Получаем документ и сразу фильтруем слова из связанной модели
         if 'id' in self.request.GET:
             document_id = self.request.GET.get('id', '')
             queryset = Document.objects.get(

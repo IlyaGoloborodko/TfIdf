@@ -17,6 +17,6 @@ class DocumentAdmin(admin.ModelAdmin):
 @admin.register(Word)
 class WordAdmin(admin.ModelAdmin):
     list_display = ['word_name', 'slug', 'total_occurences',
-                    'idf', 'processed']
+                    'idf']
     prepopulated_fields = {'slug': ('word_name',)}
     inlines = (WordDocumentInline,)

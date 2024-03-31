@@ -8,6 +8,15 @@ from nltk.corpus import stopwords
 
 from .models import Word, Document, WordDocument
 
+
+def idf_processing(words):
+    docs_count = Document.objects.count()
+
+    for i in range(len(words)):
+        #Вычисляем именно десятичный логарифм
+        words[i].idf = round(math.log10(docs_count/words[i].total_occurences), 7)
+    Word.objects.bulk_update(words, ["idf"])
+
 def words_filter(full_string: str) -> list:
     """
     Метод принимает строку и возвращает отфильтрованный от
@@ -31,8 +40,6 @@ def tfidf(text, doc_file):
             words_count[word] += 1
 
         num_of_words = len(words_count)
-
-    
         db_words = []
         #проходимся по всем словам из текста
         for elem in words_count:
@@ -53,19 +60,14 @@ def tfidf(text, doc_file):
         #Привязываем слова к документу
         document.words.add(*db_words)
 
+        #Обновляем idf
+        unprocessed_words = Word.objects.all()
+        if unprocessed_words:
+            idf_processing(unprocessed_words)
+
         return True
     return False
 
-def idf_processing(words):
-    """
-    Ленивое вычисление idf только при вызове всех значений.
-    Вызывается только после перехода на главную страницу
-    """
-    for word in words:
-        #Вычисляем именно десятичный логарифм
-        docs_count = Document.objects.count()
-        word.idf = round(math.log10(docs_count/word.total_occurences), 7)
-        word.processed = True
-        word.save()
+
 
     

@@ -6,7 +6,6 @@ class Word(models.Model):
     slug = models.SlugField(max_length=100)
     total_occurences = models.IntegerField(default=0)
     idf = models.FloatField(default=0.0)
-    processed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["-idf"]
