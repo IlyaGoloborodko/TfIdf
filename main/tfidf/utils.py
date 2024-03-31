@@ -30,6 +30,7 @@ def words_filter(full_string: str) -> list:
 def tfidf(text, doc_file):
     if len(text) != 0:
         words_count = defaultdict(int)
+        #Фильтруем слова
         filtered_words = words_filter(text)
         if filtered_words:
             document = Document.objects.create(document_name=doc_file, document_file=doc_file)
