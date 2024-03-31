@@ -2,27 +2,43 @@
 
 {% block content %}
     {% if doc %}
+        <h4 class=>{{ doc.0.document.document_name }}</h4>
         <table class="table">
                 <thead>
                     <tr>
-                    <th scope="col">{{ doc.document_name }}</th>
+                    <th scope="col"></th>
                     <th scope="col">Word</th>
                     <th scope="col">tf</th>
                     <th scope="col">idf</th>
                     </tr>
                 </thead>
                 <tbody>
-                        {% for word_document in doc %}
-                            <tr>
-                            <th scope="row">{{ forloop.counter }}</th>
-                            <td>{{ word_document.word.word_name }}</td>
-                            <td>{{ word_document.word_tf }}</td>
-                            <td>{{ word_document.word.idf }}</td>
-                            </tr>
-                        {% endfor %}
-
+                    {% for word_document in doc %}
+                        <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ word_document.word.word_name }}</td>
+                        <td>{{ word_document.word_tf }}</td>
+                        <td>{{ word_document.word.idf }}</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
         </table>
+        {% with page=page_obj  %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page.has_previous %}
+                        <a href="?page={{ page.previous_page_number }}{% if doc.0.document.id %}&id={{ doc.0.document.id }}{% endif %}">Previous</a>
+                    {% endif %}
+                    <span class="current">
+                        Page {{ page.number }} of {{ page.paginator.num_pages }}.
+                    </span>
+                    {% if page.has_next %}
+                        <a href="?page={{ page.next_page_number }}{% if doc.0.document.id %}&id={{ doc.0.document.id }}{% endif %}">Next</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% endwith %}
+
     {% else %}
         <h2>No docs:(</h2>
     {% endif %}

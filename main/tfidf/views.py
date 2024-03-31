@@ -3,16 +3,16 @@ from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 
-from .models import Document, Word
+from .models import Document
 from .forms import UploadDocumentForm
-from .utils import tfidf, idf_processing
+from .utils import tfidf
 
 
 class MainListView(ListView):
     model = Document
     context_object_name = 'doc'
     template_name = 'tfidf/main/list.html'
-    # paginate_by: int = 10
+    paginate_by = 10
 
     def get_queryset(self):
         #Получаем документ и сразу фильтруем слова из связанной модели
@@ -21,13 +21,10 @@ class MainListView(ListView):
             queryset = Document.objects.get(
                 id=document_id
             ).worddocument_set.all().order_by('-word__idf')[:50]
-
         else:
             queryset = Document.objects.all()
-
         return queryset
     
-
 class DocumentAddView(CreateView):
     model = Document
     template_name = 'tfidf/main/documentadd.html'
