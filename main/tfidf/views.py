@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
+import operator
 
 
 from .models import Document, Word
@@ -11,9 +12,9 @@ from .utils import tfidf, idf_processing
 
 class MainListView(ListView):
     model = Document
-    context_object_name = 'docs'
+    context_object_name = 'doc'
     template_name = 'tfidf/main/list.html'
-    paginate_by: int = 10
+    # paginate_by: int = 10
 
     def get_queryset(self):
         #Если есть необработанные слова, то перед выводом в них вычисляются idf
@@ -21,11 +22,17 @@ class MainListView(ListView):
         if unprocessed_words:
             idf_processing(unprocessed_words)
 
+        #Получаем документ и сразу фильтруем по словам из связанной модели
+            
         if 'id' in self.request.GET:
             document_id = self.request.GET.get('id', '')
-            queryset = Document.objects.all().filter(id=document_id)
+            queryset = Document.objects.get(
+                id=document_id
+            ).worddocument_set.all().order_by('-word__idf')[:50]
+
         else:
             queryset = Document.objects.all()
+
         return queryset
     
 

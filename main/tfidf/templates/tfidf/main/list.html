@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if docs %}
+    {% if doc %}
         <table class="table">
-            {% for doc in docs %}
                 <thead>
                     <tr>
                     <th scope="col">{{ doc.document_name }}</th>
@@ -13,16 +12,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for word_document in doc.worddocument_set.all %}
-                        <tr>
-                        <th scope="row">1</th>
-                        <td>{{ word_document.word.word_name }}</td>
-                        <td>{{ word_document.word_tf }}</td>
-                        <td>{{ word_document.word.idf }}</td>
-                        </tr>
-                    {% endfor %}
+                        {% for word_document in doc %}
+                            <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ word_document.word.word_name }}</td>
+                            <td>{{ word_document.word_tf }}</td>
+                            <td>{{ word_document.word.idf }}</td>
+                            </tr>
+                        {% endfor %}
+
                 </tbody>
-            {% endfor %}
         </table>
     {% else %}
         <h2>No docs:(</h2>

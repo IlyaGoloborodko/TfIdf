@@ -46,7 +46,7 @@ def tfidf(text, doc_file):
             db_words.append(word)
             #Обновляем слова в промежуточной таблице
             word_doc, created = WordDocument.objects.get_or_create(word=word, document=document)
-            word_doc.word_tf = round(words_count[elem]/num_of_words, 3)
+            word_doc.word_tf = round(words_count[elem]/num_of_words, 7)
 
             word_doc.save()
 
@@ -64,7 +64,7 @@ def idf_processing(words):
     for word in words:
         #Вычисляем именно десятичный логарифм
         docs_count = Document.objects.count()
-        word.idf = round(math.log10(docs_count/word.total_occurences), 3)
+        word.idf = round(math.log10(docs_count/word.total_occurences), 7)
         word.processed = True
         word.save()
 
