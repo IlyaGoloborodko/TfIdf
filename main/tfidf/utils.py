@@ -11,7 +11,6 @@ from .models import Word, Document, WordDocument
 
 def idf_processing(words):
     docs_count = Document.objects.count()
-
     for i in range(len(words)):
         #Вычисляем именно десятичный логарифм
         words[i].idf = round(math.log10(docs_count/words[i].total_occurences), 7)
@@ -39,26 +38,29 @@ def tfidf(text, doc_file):
         for word in filtered_words:
             words_count[word] += 1
 
+        #Заносим слова в бд, перед этим сначала проверяя их наличие там
+        existing_words = set(Word.objects.values_list('word_name', flat=True))
+        words_obj = [Word(word_name=elem) for elem in words_count if
+                                            elem not in existing_words]          
+        Word.objects.bulk_create(words_obj, ignore_conflicts=True)
+        words = Word.objects.filter(word_name__in=words_count)
+
+        for i in range(len(words)):
+            words[i].total_occurences += 1
+
+        Word.objects.bulk_update(words, ["total_occurences"])
+
+        #Заполняем промежуточную
+        word_doc_obj = [WordDocument(word=elem, document=document) for elem in words]
+        WordDocument.objects.bulk_create(word_doc_obj, ignore_conflicts=True)
+        word_docs = WordDocument.objects.filter(word__in=words, document=document)
+
         num_of_words = len(words_count)
-        db_words = []
-        #проходимся по всем словам из текста
-        for elem in words_count:
-            #Получаем слово и обновляем поля
-            word, created = Word.objects.get_or_create(word_name=elem)
-            word.total_occurences += 1
-            # Помечаем слово как False, чтобы в дальнейшем обновить у него idf
-            word.processed = False
-            word.save()
-            #Добавляем слово в список
-            db_words.append(word)
-            #Обновляем слова в промежуточной таблице
-            word_doc, created = WordDocument.objects.get_or_create(word=word, document=document)
-            word_doc.word_tf = round(words_count[elem]/num_of_words, 7)
+        for i in range(len(word_docs)):
+            elem_name = word_docs[i].word.word_name
+            word_docs[i].word_tf = round(words_count[elem_name]/num_of_words, 7)
 
-            word_doc.save()
-
-        #Привязываем слова к документу
-        document.words.add(*db_words)
+        WordDocument.objects.bulk_update(word_docs, ["word_tf"])
 
         #Обновляем idf
         unprocessed_words = Word.objects.all()
