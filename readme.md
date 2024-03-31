@@ -1,15 +1,48 @@
 # Расчет TF-IDF
 ## Установка и запуск
+
 ### Основной стек:
 * python 3.12
 * Django 4.2.11
-* django-bootstrap-v5
+
 ### Дополнительные библиотеки:
-* nltk (только для фильтра stopwords)
+* django-bootstrap-v5
+* nltk
+### Установка
+#### Следующая инструкция актуальна для windows
+Клонируем проект
 ```
-pip install requirements.txt
+git clone https://github.com/IlyaGoloborodko/TfIdf
+```
+Переходим в папку с проектом
+```
+cd TfIdf
 ```
 
+Ставим виртуальную среду
+```
+python -m venv .venv
+```
+Активируем venv
+```
+.venv/Scripts/activate
+```
+Ставим пакеты
+```
+pip install -r requirements.txt
+```
+Переходим в директорию с manage.py
+```
+cd main
+```
+Применяем миграции
+```
+py manage.py migrate
+```
+И наконец запускаем сервер
+```
+py manage.py runserver
+```
 ## Немного о приложении
 При первом заходе в приложение нас встречает небольшое приветственное окно:
 ![mainpage](https://i.imgur.com/1bKu9hE.png)
