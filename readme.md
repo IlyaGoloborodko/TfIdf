@@ -4,6 +4,8 @@
 * python 3.12
 * Django 4.2.11
 * django-bootstrap-v5
+### Дополнительные библиотеки:
+* nltk (только для фильтра stopwords)
 ```
 pip install requirements.txt
 ```

@@ -5,7 +5,6 @@
 __pycache__
 db.sqlite3
 media
-media/
 
 # Backup files # 
 *.bak 
@@ -63,7 +62,6 @@ parts/
 sdist/ 
 var/ 
 wheels/ 
-*.whl
 *.egg-info/ 
 .installed.cfg 
 *.egg 
